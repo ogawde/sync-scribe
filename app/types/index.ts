@@ -23,6 +23,8 @@ export interface User {
     | "join"
     | "leave"
     | "document-update"
+    | "cursor-move"
+    | "user-presence"
     | "room-created"
     | "room-joined"
     | "error";
