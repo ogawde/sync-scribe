@@ -13,7 +13,10 @@ export class WebSocketClient {
   connect(): Promise<WebSocket> {
     return new Promise((resolve, reject) => {
       try {
-       
+        if (this.ws && this.ws.readyState === WebSocket.OPEN) {
+          resolve(this.ws);
+          return;
+        }
         this.isIntentionallyClosed = false;
         this.ws = new WebSocket(WS_URL);
         
