@@ -38,7 +38,6 @@ export default function EditorPage() {
       return;
     }
 
-    // Prevent double initialization in React Strict Mode
     if (clientRef.current) {
       return;
     }
@@ -49,7 +48,6 @@ export default function EditorPage() {
 
     const initializeConnection = async () => {
       try {
-        // Register handlers BEFORE connecting to avoid race conditions
         client.on("room-joined", (payload) => {
           const { user, document: doc } = payload;
           setCurrentUser(user);
@@ -84,7 +82,6 @@ export default function EditorPage() {
         setWs(ws);
         setIsConnected(true);
 
-        // Join the room
         client.send({
           type: "join",
           payload: { roomId, username },
@@ -100,7 +97,6 @@ export default function EditorPage() {
     initializeConnection();
 
     return () => {
-      // Only disconnect on actual unmount, not on Strict Mode cleanup
       if (clientRef.current) {
         clientRef.current.disconnect();
         clientRef.current = null;
