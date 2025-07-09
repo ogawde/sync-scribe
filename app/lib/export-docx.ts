@@ -98,7 +98,7 @@ export async function exportToWord(editorContent: any, filename: string = 'docum
     
     return { success: true };
   } catch (error) {
-    console.error('Error exporting to Word:', error);
+    console.error(error);
     return { success: false, error };
   }
 }

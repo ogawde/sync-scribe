@@ -23,7 +23,6 @@ export class WebSocketClient {
         let resolved = false;
 
         this.ws.onopen = () => {
-          console.log("WebSocket connected");
           this.reconnectAttempts = 0;
           resolved = true;
           resolve(this.ws!);
@@ -67,7 +66,6 @@ export class WebSocketClient {
   private attemptReconnect() {
     if (this.reconnectAttempts < this.maxReconnectAttempts) {
       this.reconnectAttempts++;
-      console.log(`Reconnecting... Attempt ${this.reconnectAttempts}`);
       setTimeout(() => {
         this.connect().catch(console.error);
       }, this.reconnectDelay * this.reconnectAttempts);
@@ -78,7 +76,7 @@ export class WebSocketClient {
     if (this.ws && this.ws.readyState === WebSocket.OPEN) {
       this.ws.send(JSON.stringify(message));
     } else {
-      console.error("ws is not connected");
+      console.error("WebSocket is not connected");
     }
   }
 

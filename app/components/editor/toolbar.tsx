@@ -2,7 +2,6 @@
 
 import { Editor } from "@tiptap/react";
 import { Button } from "@/app/components/ui/button";
-import { Select } from "@/app/components/ui/select";
 import {
   Bold,
   Italic,
@@ -21,21 +20,8 @@ interface ToolbarProps {
   editor: Editor | null;
 }
 
-const FONTS = [
-  "Inter",
-  "Roboto",
-  "Playfair Display",
-  "Courier New",
-  "Georgia",
-  "Arial",
-];
-
 export function Toolbar({ editor }: ToolbarProps) {
   const [isExporting, setIsExporting] = useState(false);
-
-  if (!editor) {
-    return null;
-  }
 
   const handlePDFExport = async () => {
     setIsExporting(true);
@@ -48,14 +34,17 @@ export function Toolbar({ editor }: ToolbarProps) {
 
   const handleWordExport = async () => {
     setIsExporting(true);
-    const content = editor.getJSON();
+    const content = editor?.getJSON();
     await exportToWord(content);
     setIsExporting(false);
   };
 
+  if (!editor) {
+    return null;
+  }
+
   return (
     <div className="border-b bg-background p-2 flex flex-wrap items-center gap-2">
-      {/* Headings */}
       <Button
         variant={editor.isActive("heading", { level: 1 }) ? "secondary" : "ghost"}
         size="sm"
@@ -75,7 +64,6 @@ export function Toolbar({ editor }: ToolbarProps) {
 
       <div className="w-px h-6 bg-border mx-1" />
 
-      {/* Text Formatting */}
       <Button
         variant={editor.isActive("bold") ? "secondary" : "ghost"}
         size="sm"
@@ -103,7 +91,6 @@ export function Toolbar({ editor }: ToolbarProps) {
 
       <div className="w-px h-6 bg-border mx-1" />
 
-      {/* Lists */}
       <Button
         variant={editor.isActive("bulletList") ? "secondary" : "ghost"}
         size="sm"
@@ -113,26 +100,8 @@ export function Toolbar({ editor }: ToolbarProps) {
         <List className="h-4 w-4" />
       </Button>
 
-      <div className="w-px h-6 bg-border mx-1" />
-
-      {/* Font Family */}
-      <Select
-        value={editor.getAttributes("textStyle").fontFamily || "Inter"}
-        onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-          editor.chain().focus().setFontFamily(e.target.value).run()
-        }
-        className="h-9 w-40"
-      >
-        {FONTS.map((font) => (
-          <option key={font} value={font}>
-            {font}
-          </option>
-        ))}
-      </Select>
-
       <div className="flex-1" />
 
-      {/* Export Buttons */}
       <Button
         variant="outline"
         size="sm"

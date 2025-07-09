@@ -115,7 +115,8 @@ export default function Home() {
                   Start a new collaborative session
                 </CardDescription>
               </CardHeader>
-              <CardContent>
+              <CardContent className="space-y-4">
+                <div className="h-10" />
                 <Button
                   onClick={initiateCreate}
                   className="w-full"

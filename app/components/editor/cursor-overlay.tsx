@@ -33,20 +33,12 @@ export function CursorOverlay() {
             top: `${cursor.y}px`,
           }}
         >
-          <svg
-            width="20"
-            height="20"
-            viewBox="0 0 20 20"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M5.65376 12.3673L0 0L11.5468 7.05429L7.23737 8.28426L5.65376 12.3673Z"
-              fill={cursor.color}
-            />
-          </svg>
           <div
-            className="ml-5 -mt-2 px-2 py-1 rounded text-xs text-white whitespace-nowrap"
+            className="w-px h-6"
+            style={{ backgroundColor: cursor.color }}
+          />
+          <div
+            className="ml-2 -mt-1 px-2 py-1 rounded text-xs text-white whitespace-nowrap"
             style={{ backgroundColor: cursor.color }}
           >
             {cursor.username}

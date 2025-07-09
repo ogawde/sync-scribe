@@ -29,7 +29,7 @@ export async function exportToPDF(editorElement: HTMLElement, filename: string =
     
     return { success: true };
   } catch (error) {
-    console.error('Error exporting to PDF:', error);
+    console.error(error);
     return { success: false, error };
   }
 }

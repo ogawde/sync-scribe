@@ -40,7 +40,6 @@ export function TextEditor({ onUpdate, onCursorMove }: TextEditorProps) {
       onUpdate?.(json);
     },
     onSelectionUpdate: ({ editor }: { editor: any }) => {
-      // Throttle cursor position updates
       const now = Date.now();
       if (now - lastCursorMove.current < 100) return;
       lastCursorMove.current = now;
