@@ -1,7 +1,7 @@
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 
-export async function exportToPDF(editorElement: HTMLElement, filename: string = 'document.pdf') {
+export async function exportToPDF(editorElement: HTMLElement, filename = 'document.pdf') {
   try {
     const canvas = await html2canvas(editorElement, {
       scale: 2,
@@ -26,11 +26,6 @@ export async function exportToPDF(editorElement: HTMLElement, filename: string =
 
     pdf.addImage(imgData, 'PNG', imgX, imgY, imgWidth * ratio, imgHeight * ratio);
     pdf.save(filename);
-    
-    return { success: true };
-  } catch (error) {
-    console.error(error);
-    return { success: false, error };
-  }
+  } catch {}
 }
 

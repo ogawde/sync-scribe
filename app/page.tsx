@@ -42,13 +42,11 @@ export default function Home() {
       });
 
       await wsClient.connect();
-
       wsClient.send({
         type: "create-room",
         payload: {},
       });
-    } catch (err) {
-      console.error("Connection error:", err);
+    } catch {
       setError("Failed to connect to server. Please try again.");
       setIsCreating(false);
     }

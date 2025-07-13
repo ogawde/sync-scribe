@@ -1,47 +1,34 @@
 "use client";
 
 import { useEditorStore } from "@/app/lib/store";
-import { useEffect, useState } from "react";
 
 export function CursorOverlay() {
   const { users, currentUser } = useEditorStore();
-  const [cursors, setCursors] = useState<Map<string, { x: number; y: number; username: string; color: string }>>(new Map());
 
-  useEffect(() => {
-    const newCursors = new Map();
-    users.forEach((user) => {
-      if (user.id !== currentUser?.id && user.cursorPosition) {
-        newCursors.set(user.id, {
-          x: user.cursorPosition.x,
-          y: user.cursorPosition.y,
-          username: user.username,
-          color: user.color,
-        });
-      }
-    });
-    setCursors(newCursors);
-  }, [users, currentUser]);
+  const otherUsers = users.filter(
+    (user) => user.id !== currentUser?.id && user.cursorPosition
+  );
 
   return (
     <>
-      {Array.from(cursors.entries()).map(([userId, cursor]) => (
+      {otherUsers.map((user) => (
         <div
-          key={userId}
+          key={user.id}
           className="fixed pointer-events-none z-50 transition-all duration-100"
           style={{
-            left: `${cursor.x}px`,
-            top: `${cursor.y}px`,
+            left: `${user.cursorPosition.x}px`,
+            top: `${user.cursorPosition.y}px`,
           }}
         >
           <div
             className="w-px h-6"
-            style={{ backgroundColor: cursor.color }}
+            style={{ backgroundColor: user.color }}
           />
           <div
             className="ml-2 -mt-1 px-2 py-1 rounded text-xs text-white whitespace-nowrap"
-            style={{ backgroundColor: cursor.color }}
+            style={{ backgroundColor: user.color }}
           >
-            {cursor.username}
+            {user.username}
           </div>
         </div>
       ))}

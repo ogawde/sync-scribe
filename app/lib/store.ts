@@ -27,15 +27,10 @@ export const useEditorStore = create<EditorStore>((set) => ({
   ws: null,
 
   setUsers: (users) => set({ users }),
-
   setCurrentUser: (currentUser) => set({ currentUser }),
-  
   setRoomId: (roomId) => set({ roomId }),
-  
   setIsConnected: (isConnected) => set({ isConnected }),
-  
   setDocument: (document) => set({ document }),
-  
   setWs: (ws) => set({ ws }),
   
   updateUserCursor: (userId, cursorPosition) =>
@@ -45,4 +40,3 @@ export const useEditorStore = create<EditorStore>((set) => ({
       ),
     })),
 }));
-

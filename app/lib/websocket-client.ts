@@ -25,7 +25,7 @@ export class WebSocketClient {
         this.ws.onopen = () => {
           this.reconnectAttempts = 0;
           resolved = true;
-          resolve(this.ws!);
+          resolve(this.ws);
         };
 
         this.ws.onmessage = (event) => {
@@ -35,17 +35,12 @@ export class WebSocketClient {
             if (handler) {
               handler(message.payload);
             }
-          } catch (error) {
-            console.error(error);
-          }
+          } catch {}
         };
 
         this.ws.onerror = (error) => {
-          if (!this.isIntentionallyClosed) {
-            console.error(error);
-            if (!resolved) {
-              reject(error);
-            }
+          if (!this.isIntentionallyClosed && !resolved) {
+            reject(error);
           }
         };
 
@@ -67,7 +62,7 @@ export class WebSocketClient {
     if (this.reconnectAttempts < this.maxReconnectAttempts) {
       this.reconnectAttempts++;
       setTimeout(() => {
-        this.connect().catch(console.error);
+        this.connect().catch(() => {});
       }, this.reconnectDelay * this.reconnectAttempts);
     }
   }
@@ -75,8 +70,6 @@ export class WebSocketClient {
   send(message: WebSocketMessage) {
     if (this.ws && this.ws.readyState === WebSocket.OPEN) {
       this.ws.send(JSON.stringify(message));
-    } else {
-      console.error("WebSocket is not connected");
     }
   }
 
@@ -92,16 +85,10 @@ export class WebSocketClient {
     this.isIntentionallyClosed = true;
     this.messageHandlers.clear();
     if (this.ws) {
-      try {
-        
-        if (this.ws.readyState === WebSocket.OPEN || this.ws.readyState === WebSocket.CONNECTING) {
-          this.ws.close();
-        }
-      } catch (error) {
-        console.error(error);
-      } finally {
-        this.ws = null;
+      if (this.ws.readyState === WebSocket.OPEN || this.ws.readyState === WebSocket.CONNECTING) {
+        this.ws.close();
       }
+      this.ws = null;
     }
   }
 

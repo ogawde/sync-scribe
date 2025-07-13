@@ -8,7 +8,6 @@ import { CursorOverlay } from "@/app/components/editor/cursor-overlay";
 import { ShareRoom } from "@/app/components/editor/share-room";
 import { useEditorStore } from "@/app/lib/store";
 import { WebSocketClient } from "@/app/lib/websocket-client";
-import { User } from "@/app/types";
 
 export default function EditorPage() {
   const params = useParams();
@@ -28,7 +27,7 @@ export default function EditorPage() {
   } = useEditorStore();
 
   const [wsClient, setWsClient] = useState<WebSocketClient | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState("");
   const [isConnecting, setIsConnecting] = useState(true);
   const clientRef = useRef<WebSocketClient | null>(null);
 
@@ -86,8 +85,7 @@ export default function EditorPage() {
           type: "join",
           payload: { roomId, username },
         });
-      } catch (err) {
-        console.error("Failed to connect:", err);
+      } catch {
         setError("Failed to connect to server");
         setIsConnecting(false);
         setTimeout(() => router.push("/"), 3000);

@@ -57,7 +57,6 @@ export function TextEditor({ onUpdate, onCursorMove }: TextEditorProps) {
     },
   });
 
-  // Update editor content when document changes from WebSocket
   useEffect(() => {
     if (editor && initialDocument) {
       const currentContent = JSON.stringify(editor.getJSON());

@@ -80,7 +80,7 @@ function extractTextRuns(node: TipTapNode): TextRun[] {
   return textRuns.length > 0 ? textRuns : [new TextRun({ text: '' })];
 }
 
-export async function exportToWord(editorContent: any, filename: string = 'document.docx') {
+export async function exportToWord(editorContent: any, filename = 'document.docx') {
   try {
     const paragraphs = convertTipTapToDocx(editorContent);
 
@@ -95,11 +95,6 @@ export async function exportToWord(editorContent: any, filename: string = 'docum
 
     const blob = await Packer.toBlob(doc);
     saveAs(blob, filename);
-    
-    return { success: true };
-  } catch (error) {
-    console.error(error);
-    return { success: false, error };
-  }
+  } catch {}
 }
 
