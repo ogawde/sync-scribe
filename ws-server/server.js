@@ -1,7 +1,7 @@
 const WebSocket = require('ws');
 const RoomManager = require('./room-manager');
 
-const PORT = 8080;
+const PORT = process.env.PORT || 8080;
 const wss = new WebSocket.Server({ port: PORT });
 const roomManager = new RoomManager();
 

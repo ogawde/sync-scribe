@@ -1,6 +1,6 @@
 import { WebSocketMessage } from "@/app/types";
 
-const WS_URL = "ws://localhost:8080";
+const WS_URL = process.env.NEXT_PUBLIC_WS_URL || "ws://localhost:8080";
 
 export class WebSocketClient {
   private ws: WebSocket | null = null;
