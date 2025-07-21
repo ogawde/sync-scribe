@@ -18,17 +18,18 @@ export class WebSocketClient {
           return;
         }
         this.isIntentionallyClosed = false;
-        this.ws = new WebSocket(WS_URL);
+        const ws = new WebSocket(WS_URL);
+        this.ws = ws;
         
         let resolved = false;
 
-        this.ws.onopen = () => {
+        ws.onopen = () => {
           this.reconnectAttempts = 0;
           resolved = true;
-          resolve(this.ws);
+          resolve(ws);
         };
 
-        this.ws.onmessage = (event) => {
+        ws.onmessage = (event) => {
           try {
             const message: WebSocketMessage = JSON.parse(event.data);
             const handler = this.messageHandlers.get(message.type);
@@ -38,13 +39,13 @@ export class WebSocketClient {
           } catch {}
         };
 
-        this.ws.onerror = (error) => {
+        ws.onerror = (error) => {
           if (!this.isIntentionallyClosed && !resolved) {
             reject(error);
           }
         };
 
-        this.ws.onclose = () => {
+        ws.onclose = () => {
           this.ws = null;
           if (!this.isIntentionallyClosed && !resolved) {
             reject(new Error("WebSocket closed"));

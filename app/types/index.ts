@@ -27,6 +27,7 @@ export type MessageType =
   | "user-presence"
   | "room-created"
   | "room-joined"
+  | "create-room"
   | "error";
 
 export interface WebSocketMessage {
