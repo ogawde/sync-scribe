@@ -45,6 +45,33 @@
   }
 }
 
+@keyframes cell-ripple {
+  0% {
+    opacity: 0.35;
+    transform: scale(1);
+    background-color: var(--cell-fill-color);
+  }
+
+  50% {
+    opacity: 0.95;
+    transform: scale(0.96);
+    background-color: color-mix(in srgb, var(--cell-fill-color) 82%, #d1d5db 18%);
+  }
+
+  100% {
+    opacity: 0.35;
+    transform: scale(1);
+    background-color: var(--cell-fill-color);
+  }
+}
+
+@layer utilities {
+  .animate-cell-ripple {
+    animation: cell-ripple var(--duration, 600ms) ease-out;
+    animation-delay: var(--delay, 0ms);
+  }
+}
+
 /* TipTap Editor Styles */
 .tiptap {
   outline: none;

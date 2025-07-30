@@ -2,10 +2,10 @@
 
 import { useEffect, useState, useRef } from "react";
 import { useParams, useSearchParams, useRouter } from "next/navigation";
-import { TextEditor } from "@/app/components/editor/text-editor";
-import { UserPresence } from "@/app/components/editor/user-presence";
-import { CursorOverlay } from "@/app/components/editor/cursor-overlay";
-import { ShareRoom } from "@/app/components/editor/share-room";
+import { TextEditor } from "@/components/editor/text-editor";
+import { UserPresence } from "@/components/editor/user-presence";
+import { CursorOverlay } from "@/components/editor/cursor-overlay";
+import { ShareRoom } from "@/components/editor/share-room";
 import { useEditorStore } from "@/app/lib/store";
 import { WebSocketClient } from "@/app/lib/websocket-client";
 

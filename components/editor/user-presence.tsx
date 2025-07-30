@@ -1,6 +1,5 @@
 "use client";
 
-import { User } from "@/app/types";
 import { useEditorStore } from "@/app/lib/store";
 
 export function UserPresence() {
@@ -46,4 +45,3 @@ export function UserPresence() {
     </div>
   );
 }
-

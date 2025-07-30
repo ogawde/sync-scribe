@@ -48,7 +48,6 @@ export function TextEditor({ onUpdate, onCursorMove }: TextEditorProps) {
       const coords = editor.view.coordsAtPos(from);
       
       if (editorRef.current) {
-        const rect = editorRef.current.getBoundingClientRect();
         const x = coords.left;
         const y = coords.top;
         
@@ -77,4 +76,3 @@ export function TextEditor({ onUpdate, onCursorMove }: TextEditorProps) {
     </div>
   );
 }
-

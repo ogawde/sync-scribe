@@ -1,7 +1,7 @@
 "use client";
 
 import { Editor } from "@tiptap/react";
-import { Button } from "@/app/components/ui/button";
+import { Button } from "@/components/ui/button";
 import {
   Bold,
   Italic,
@@ -125,4 +125,3 @@ export function Toolbar({ editor }: ToolbarProps) {
     </div>
   );
 }
-
