@@ -13,7 +13,10 @@ export function ShareRoom({ roomId, userCount }: ShareRoomProps) {
   const [copied, setCopied] = useState(false);
 
   const handleCopy = async () => {
-    await navigator.clipboard.writeText(roomId);
+    const origin = typeof window !== "undefined" ? window.location.origin : "";
+    const shareUrl = `${origin}/editor/${roomId}`;
+
+    await navigator.clipboard.writeText(shareUrl);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };

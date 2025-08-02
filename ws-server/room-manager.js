@@ -4,6 +4,7 @@ class RoomManager {
   constructor() {
     this.rooms = new Map();
     this.userColors = ['#3B82F6', '#EF4444', '#10B981', '#F59E0B'];
+    this.roomTtlMs = 60000;
   }
 
   generateRoomCode() {
@@ -60,7 +61,12 @@ class RoomManager {
     }
 
     if (room.users.length === 0) {
-      this.rooms.delete(roomId);
+      setTimeout(() => {
+        const latestRoom = this.rooms.get(roomId);
+        if (latestRoom && latestRoom.users.length === 0) {
+          this.rooms.delete(roomId);
+        }
+      }, this.roomTtlMs);
     }
 
     return room;

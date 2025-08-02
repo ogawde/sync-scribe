@@ -6,7 +6,6 @@ export default function Home() {
     <div className="relative min-h-screen overflow-hidden bg-white">
       <BackgroundRippleEffect
         interactive={false}
-        autoRipple
         cellSize={52}
         className="opacity-60 [--cell-border-color:rgba(0,0,0,0.15)] [--cell-fill-color:rgba(255,255,255,0.96)] [--cell-shadow-color:rgba(0,0,0,0.06)]"
       />
