@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { Editor } from "@tiptap/react";
 import { Button } from "@/components/ui/button";
 import {
@@ -11,21 +12,23 @@ import {
   List,
   Download,
   FileText,
+  Code2,
 } from "lucide-react";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { exportToPDF } from "@/app/lib/export-pdf";
 import { exportToWord } from "@/app/lib/export-docx";
-import { useState } from "react";
 
 interface ToolbarProps {
   editor: Editor | null;
 }
+
 
 export function Toolbar({ editor }: ToolbarProps) {
   const [isExporting, setIsExporting] = useState(false);
 
   const handlePDFExport = async () => {
     setIsExporting(true);
-    const editorElement = document.querySelector('.tiptap') as HTMLElement;
+    const editorElement = document.querySelector(".tiptap") as HTMLElement;
     if (editorElement) {
       await exportToPDF(editorElement);
     }
@@ -44,84 +47,135 @@ export function Toolbar({ editor }: ToolbarProps) {
   }
 
   return (
-    <div className="border-b bg-background p-2 flex flex-wrap items-center gap-2">
-      <Button
-        variant={editor.isActive("heading", { level: 1 }) ? "secondary" : "ghost"}
-        size="sm"
-        onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
-        title="Heading 1"
-      >
-        <Heading1 className="h-4 w-4" />
-      </Button>
-      <Button
-        variant={editor.isActive("heading", { level: 2 }) ? "secondary" : "ghost"}
-        size="sm"
-        onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
-        title="Heading 2"
-      >
-        <Heading2 className="h-4 w-4" />
-      </Button>
+    <TooltipProvider delayDuration={150}>
+      <div className="border-b bg-background p-2 flex flex-wrap items-center justify-center gap-2">
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant={editor.isActive("heading", { level: 1 }) ? "secondary" : "ghost"}
+              size="sm"
+              onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
+            >
+              <Heading1 className="h-4 w-4" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>Heading 1 (Ctrl + Alt + 1)</TooltipContent>
+        </Tooltip>
 
-      <div className="w-px h-6 bg-border mx-1" />
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant={editor.isActive("heading", { level: 2 }) ? "secondary" : "ghost"}
+              size="sm"
+              onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
+            >
+              <Heading2 className="h-4 w-4" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>Heading 2 (Ctrl + Alt + 2)</TooltipContent>
+        </Tooltip>
 
-      <Button
-        variant={editor.isActive("bold") ? "secondary" : "ghost"}
-        size="sm"
-        onClick={() => editor.chain().focus().toggleBold().run()}
-        title="Bold"
-      >
-        <Bold className="h-4 w-4" />
-      </Button>
-      <Button
-        variant={editor.isActive("italic") ? "secondary" : "ghost"}
-        size="sm"
-        onClick={() => editor.chain().focus().toggleItalic().run()}
-        title="Italic"
-      >
-        <Italic className="h-4 w-4" />
-      </Button>
-      <Button
-        variant={editor.isActive("underline") ? "secondary" : "ghost"}
-        size="sm"
-        onClick={() => editor.chain().focus().toggleUnderline().run()}
-        title="Underline"
-      >
-        <Underline className="h-4 w-4" />
-      </Button>
+        <div className="w-px h-6 bg-border mx-1" />
 
-      <div className="w-px h-6 bg-border mx-1" />
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant={editor.isActive("bold") ? "secondary" : "ghost"}
+              size="sm"
+              onClick={() => editor.chain().focus().toggleBold().run()}
+            >
+              <Bold className="h-4 w-4" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>Bold (Ctrl + B)</TooltipContent>
+        </Tooltip>
 
-      <Button
-        variant={editor.isActive("bulletList") ? "secondary" : "ghost"}
-        size="sm"
-        onClick={() => editor.chain().focus().toggleBulletList().run()}
-        title="Bullet List"
-      >
-        <List className="h-4 w-4" />
-      </Button>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant={editor.isActive("italic") ? "secondary" : "ghost"}
+              size="sm"
+              onClick={() => editor.chain().focus().toggleItalic().run()}
+            >
+              <Italic className="h-4 w-4" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>Italic (Ctrl + I)</TooltipContent>
+        </Tooltip>
 
-      <div className="flex-1" />
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant={editor.isActive("underline") ? "secondary" : "ghost"}
+              size="sm"
+              onClick={() => editor.chain().focus().toggleUnderline().run()}
+            >
+              <Underline className="h-4 w-4" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>Underline</TooltipContent>
+        </Tooltip>
 
-      <Button
-        variant="outline"
-        size="sm"
-        onClick={handlePDFExport}
-        disabled={isExporting}
-        title="Export as PDF"
-      >
-        <Download className="h-4 w-4 mr-2" />
-        PDF
-      </Button>
-      <Button
-        variant="outline"
-        size="sm"
-        onClick={handleWordExport}
-        disabled={isExporting}
-        title="Export as Word"
-      >
-        <FileText className="h-4 w-4 mr-2" />
-        Word
-      </Button>
-    </div>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant={editor.isActive("code") ? "secondary" : "ghost"}
+              size="sm"
+              onClick={() => editor.chain().focus().toggleCode().run()}
+            >
+              <Code2 className="h-4 w-4" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>Inline code (Ctrl + E)</TooltipContent>
+        </Tooltip>
+
+        <div className="w-px h-6 bg-border mx-1" />
+
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant={editor.isActive("bulletList") ? "secondary" : "ghost"}
+              size="sm"
+              onClick={() => editor.chain().focus().toggleBulletList().run()}
+            >
+              <List className="h-4 w-4" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>Bullet list</TooltipContent>
+        </Tooltip>
+
+        <div className="w-px h-6 bg-border mx-1" />
+
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handlePDFExport}
+              disabled={isExporting}
+            >
+              <Download className="h-4 w-4 mr-2" />
+              PDF
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>Export as PDF</TooltipContent>
+        </Tooltip>
+
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleWordExport}
+              disabled={isExporting}
+            >
+              <FileText className="h-4 w-4 mr-2" />
+              Word
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>Export as Word</TooltipContent>
+        </Tooltip>
+      </div>
+    </TooltipProvider>
   );
 }

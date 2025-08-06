@@ -14,7 +14,11 @@ interface TextEditorProps {
   onCursorMove?: (position: { x: number; y: number; from: number; to: number }) => void;
 }
 
+
+
+
 export function TextEditor({ onUpdate, onCursorMove }: TextEditorProps) {
+
   const { document: initialDocument } = useEditorStore();
   const lastCursorMove = useRef(0);
   const editorRef = useRef<HTMLDivElement>(null);
@@ -46,11 +50,11 @@ export function TextEditor({ onUpdate, onCursorMove }: TextEditorProps) {
 
       const { from, to } = editor.state.selection;
       const coords = editor.view.coordsAtPos(from);
-      
+
       if (editorRef.current) {
         const x = coords.left;
         const y = coords.top;
-        
+
         onCursorMove?.({ x, y, from, to });
       }
     },
@@ -60,7 +64,7 @@ export function TextEditor({ onUpdate, onCursorMove }: TextEditorProps) {
     if (editor && initialDocument) {
       const currentContent = JSON.stringify(editor.getJSON());
       const newContent = JSON.stringify(initialDocument);
-      
+
       if (currentContent !== newContent) {
         editor.commands.setContent(initialDocument, false);
       }
@@ -75,4 +79,5 @@ export function TextEditor({ onUpdate, onCursorMove }: TextEditorProps) {
       </div>
     </div>
   );
+  
 }

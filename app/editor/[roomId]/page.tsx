@@ -9,6 +9,7 @@ import { ShareRoom } from "@/components/editor/share-room";
 import { useEditorStore } from "@/app/lib/store";
 import { WebSocketClient } from "@/app/lib/websocket-client";
 
+
 export default function EditorPage() {
   const params = useParams<{ roomId: string }>();
   const searchParams = useSearchParams();
@@ -227,5 +228,6 @@ export default function EditorPage() {
       </div>
       <CursorOverlay />
     </div>
+    
   );
 }
