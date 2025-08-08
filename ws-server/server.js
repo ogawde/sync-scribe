@@ -2,19 +2,66 @@ const WebSocket = require('ws');
 const RoomManager = require('./room-manager');
 
 const PORT = process.env.PORT || 8080;
+const MAX_CONNECTIONS_PER_IP = parseInt(process.env.MAX_CONNECTIONS_PER_IP || '20', 10);
+const MAX_TOTAL_CONNECTIONS = parseInt(process.env.MAX_TOTAL_CONNECTIONS || '200', 10);
+const MAX_MESSAGE_BYTES = parseInt(process.env.MAX_MESSAGE_BYTES || '65536', 10);
+const IDLE_TIMEOUT_MS = parseInt(process.env.IDLE_TIMEOUT_MS || '900000', 10);
+const ALLOWED_ORIGINS = process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split(',').map(o => o.trim()).filter(Boolean) : [];
+
 const wss = new WebSocket.Server({ port: PORT });
 const roomManager = new RoomManager();
 
 const userRoomMap = new Map(); 
+const ipConnectionCounts = new Map();
 
 console.log(`WebSocket server running on port ${PORT}`);
 
-wss.on('connection', (ws) => {
+wss.on('connection', (ws, req) => {
+  const origin = req.headers.origin;
+  if (ALLOWED_ORIGINS.length && (!origin || !ALLOWED_ORIGINS.includes(origin))) {
+    ws.close(1008, 'Invalid origin');
+    return;
+  }
+
+  if (wss.clients.size > MAX_TOTAL_CONNECTIONS) {
+    ws.close(1013, 'Server overloaded');
+    return;
+  }
+
+  const forwardedFor = req.headers['x-forwarded-for'];
+  const ip = (typeof forwardedFor === 'string' && forwardedFor.split(',')[0].trim()) || req.socket.remoteAddress || 'unknown';
+
+  const currentCount = ipConnectionCounts.get(ip) || 0;
+  if (currentCount >= MAX_CONNECTIONS_PER_IP) {
+    ws.close(1008, 'Too many connections from this IP');
+    return;
+  }
+
+  ipConnectionCounts.set(ip, currentCount + 1);
+
+  let idleTimer = setTimeout(() => {
+    ws.close(1000, 'Idle timeout');
+  }, IDLE_TIMEOUT_MS);
+
+  const resetIdleTimer = () => {
+    clearTimeout(idleTimer);
+    idleTimer = setTimeout(() => {
+      ws.close(1000, 'Idle timeout');
+    }, IDLE_TIMEOUT_MS);
+  };
+
   console.log('New client connected');
   let currentUserId = null;
   let currentRoomId = null;
 
   ws.on('message', (data) => {
+    if (Buffer.byteLength(data) > MAX_MESSAGE_BYTES) {
+      ws.close(1009, 'Message too large');
+      return;
+    }
+
+    resetIdleTimer();
+
     try {
       const message = JSON.parse(data.toString());
       console.log('Received message:', message.type);
@@ -107,6 +154,15 @@ wss.on('connection', (ws) => {
   });
 
   ws.on('close', () => {
+    clearTimeout(idleTimer);
+
+    const count = ipConnectionCounts.get(ip) || 0;
+    if (count <= 1) {
+      ipConnectionCounts.delete(ip);
+    } else {
+      ipConnectionCounts.set(ip, count - 1);
+    }
+
     console.log('Client disconnected');
     
     if (currentUserId && currentRoomId) {
